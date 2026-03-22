@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="StatisticsFormApp/StatisticsFormApp.csproj" />
+  <Project Path="StatisticsManagement/StatisticsManagement.csproj" Id="db06d651-b843-4261-95d3-0f9f8e035a50" />
 </Solution>

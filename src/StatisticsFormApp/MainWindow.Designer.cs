@@ -127,6 +127,7 @@
             Margin = new Padding(4);
             MaximizeBox = false;
             Name = "MainWindow";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Менеджер статистики";
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();

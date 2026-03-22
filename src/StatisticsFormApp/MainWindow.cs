@@ -1,3 +1,5 @@
+using StatisticsManagement;
+
 namespace StatisticsFormApp;
 
 public partial class MainWindow : Form
@@ -9,8 +11,7 @@ public partial class MainWindow : Form
 
     private void ToolStripMenuItemParams_Click(object sender, EventArgs e)
     {
-        var paramsForm = new ParamsForm();
-        paramsForm.ShowDialog();
+        new ParamsForm().ShowDialog();
     }
 
     private void textBoxActivity_TextChanged(object sender, EventArgs e)
@@ -35,7 +36,10 @@ public partial class MainWindow : Form
 
         if (dialog.ShowDialog() == DialogResult.OK)
         {
-            MessageBox.Show("Сохранено в: " + dialog.FileName);
+            new StatisticsManager().Process(textBoxActivity.Text, 
+                textBoxTitanit.Text, 
+                dialog.FileName, 
+                new StatisticsConfig(Params.DailyActivity, Params.WeeklyActivity, Params.DailyTitanit, Params.WeeklyTitanit));
         }
     }
 
