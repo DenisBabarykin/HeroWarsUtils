@@ -6,5 +6,5 @@ namespace StatisticsManagement.InputModels;
 
 internal class InputTable
 {
-    public List<InputPlayer> InputPlayers { get; set; } = new List<InputPlayer>();
+    public List<InputPlayer> InputPlayers { get; set; } = [];
 }

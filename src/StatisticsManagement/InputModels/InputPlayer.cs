@@ -7,5 +7,5 @@ namespace StatisticsManagement.InputModels;
 internal class InputPlayer
 {
     public string Name { get; set; } = "";
-    public List<double> Points { get; set; } = new List<double>();
+    public List<InputDay> InputDays { get; set; } = new List<InputDay>(7);
 }
