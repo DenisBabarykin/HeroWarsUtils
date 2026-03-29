@@ -6,10 +6,19 @@ namespace StatisticsManagement.CalculationModels;
 
 internal class Player
 {
-    public string Name { get; } = "UnknownPlayer";
+    public string Name { get; }
 
-    public List<double> ActivityPoints { get; } = [];
+    public List<Day> Days { get; }
 
-    public List<double> TitanitPoints { get; } = [];
+    public Player(string name, List<Day> days)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException(nameof(name), "Имя не может быть пустым");
 
+        if (days.Count == 0)
+            throw new ArgumentOutOfRangeException(nameof(days), "Коллекция дней не может быть пустой.");
+
+        Name = name;
+        Days = days;
+    }
 }
