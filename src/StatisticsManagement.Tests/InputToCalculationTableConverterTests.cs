@@ -390,4 +390,103 @@ Player1,10,20,30,40,50,60,70";
         Assert.Single(result.Players);
         Assert.All(result.Players[0].Days, d => Assert.True(d.IsEmpty));
     }
+
+    [Fact]
+    public void Convert_ReversedPlayerOrder_MapsCorrectly()
+    {
+        // Arrange
+        string activityCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+Player1,100,200,300,400,500,600,700
+Player2,150,250,350,450,550,650,750
+Player3,200,300,400,500,600,700,800";
+
+        string titanitCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+Player3,30,40,50,60,70,80,90
+Player2,20,30,40,50,60,70,80
+Player1,10,20,30,40,50,60,70";
+
+        var activityTable = _csvConverter.Convert(activityCsv);
+        var titanitTable = _csvConverter.Convert(titanitCsv);
+
+        // Act
+        var result = _converter.Convert(activityTable, titanitTable);
+
+        // Assert
+        Assert.Equal(3, result.Players.Count);
+        Assert.Equal("Player1", result.Players[0].Name);
+        Assert.Equal(100, result.Players[0].Days[0].ActivityPoints);
+        Assert.Equal(10, result.Players[0].Days[0].TitanitPoints);
+        Assert.Equal("Player2", result.Players[1].Name);
+        Assert.Equal(150, result.Players[1].Days[0].ActivityPoints);
+        Assert.Equal(20, result.Players[1].Days[0].TitanitPoints);
+        Assert.Equal("Player3", result.Players[2].Name);
+        Assert.Equal(200, result.Players[2].Days[0].ActivityPoints);
+        Assert.Equal(30, result.Players[2].Days[0].TitanitPoints);
+    }
+
+    [Fact]
+    public void Convert_ScrambledPlayerOrder_MapsCorrectly()
+    {
+        // Arrange
+        string activityCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+Alpha,100,200,300,400,500,600,700
+Beta,150,250,350,450,550,650,750
+Gamma,200,300,400,500,600,700,800
+Delta,250,350,450,550,650,750,850";
+
+        string titanitCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+Gamma,70,80,90,100,110,120,130
+Alpha,10,20,30,40,50,60,70
+Delta,90,100,110,120,130,140,150
+Beta,30,40,50,60,70,80,90";
+
+        var activityTable = _csvConverter.Convert(activityCsv);
+        var titanitTable = _csvConverter.Convert(titanitCsv);
+
+        // Act
+        var result = _converter.Convert(activityTable, titanitTable);
+
+        // Assert
+        Assert.Equal(4, result.Players.Count);
+        Assert.Equal("Alpha", result.Players[0].Name);
+        Assert.Equal(100, result.Players[0].Days[0].ActivityPoints);
+        Assert.Equal(10, result.Players[0].Days[0].TitanitPoints);
+        Assert.Equal("Beta", result.Players[1].Name);
+        Assert.Equal(150, result.Players[1].Days[0].ActivityPoints);
+        Assert.Equal(30, result.Players[1].Days[0].TitanitPoints);
+        Assert.Equal("Gamma", result.Players[2].Name);
+        Assert.Equal(200, result.Players[2].Days[0].ActivityPoints);
+        Assert.Equal(70, result.Players[2].Days[0].TitanitPoints);
+        Assert.Equal("Delta", result.Players[3].Name);
+        Assert.Equal(250, result.Players[3].Days[0].ActivityPoints);
+        Assert.Equal(90, result.Players[3].Days[0].TitanitPoints);
+    }
+
+    [Fact]
+    public void Convert_SlightlyDifferentNamesWithDifferentOrder_MapsCorrectly()
+    {
+        // Arrange
+        string activityCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+Maximussimo,100,200,300,400,500,600,700
+JohnDoe,150,250,350,450,550,650,750";
+
+        string titanitCsv = @"Игрок,пн,вт,ср,чт,пт,сб,вс
+JohnDoe,20,30,40,50,60,70,80
+Maximus,10,20,30,40,50,60,70";
+
+        var activityTable = _csvConverter.Convert(activityCsv);
+        var titanitTable = _csvConverter.Convert(titanitCsv);
+
+        // Act
+        var result = _converter.Convert(activityTable, titanitTable);
+
+        // Assert
+        Assert.Equal(2, result.Players.Count);
+        Assert.Equal("Maximussimo", result.Players[0].Name);
+        Assert.Equal(100, result.Players[0].Days[0].ActivityPoints);
+        Assert.Equal(10, result.Players[0].Days[0].TitanitPoints);
+        Assert.Equal("JohnDoe", result.Players[1].Name);
+        Assert.Equal(150, result.Players[1].Days[0].ActivityPoints);
+        Assert.Equal(20, result.Players[1].Days[0].TitanitPoints);
+    }
 }

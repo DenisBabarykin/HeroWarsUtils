@@ -6,7 +6,7 @@ using System.Text;
 
 namespace StatisticsManagement;
 
-public class StatisticsManager
+public class StatisticsFacade
 {
     public void Process(string activityCsv, string titanitCsv, string outputFilename, StatisticsConfig statisticsConfig)
     {

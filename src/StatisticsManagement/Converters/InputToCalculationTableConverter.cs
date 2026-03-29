@@ -3,6 +3,7 @@ using StatisticsManagement.InputModels;
 using StatisticsManagement.StringComparation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace StatisticsManagement.Converters;
@@ -28,10 +29,10 @@ internal class InputToCalculationTableConverter
         {
             var closestPlayer = titanitTable.InputPlayers.MinBy(p => _stringDistanceComparator.CalcDistance(inputPlayer.Name, p.Name));
             if (closestPlayer is null)
-                throw new ArgumentNullException(nameof(closestPlayer));
+                throw new ArgumentException(nameof(titanitTable), "Не удалось найти подходящего игрока в таблице титанита.");
 
             if (!selectedTitanitPlayers.Add(closestPlayer))
-                throw new ArgumentException(nameof(titanitTable), $"Игрок '{inputPlayer.Name}' был смаплен с уже смапленным ранее игроком '${closestPlayer.Name}'.");
+                throw new ArgumentException(nameof(titanitTable), $"Игрок '{inputPlayer.Name}' был смаплен с уже смапленным ранее игроком '{closestPlayer.Name}'.");
 
             if (inputPlayer.InputDays.Count != closestPlayer.InputDays.Count)
                 throw new ArgumentException(nameof(titanitTable), "Количество дней у игрока в таблицах не совпало.");
