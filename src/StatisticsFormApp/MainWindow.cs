@@ -36,7 +36,7 @@ public partial class MainWindow : Form
 
         if (dialog.ShowDialog() == DialogResult.OK)
         {
-            new StatisticsManager().Process(textBoxActivity.Text, 
+            new StatisticsFacade().Process(textBoxActivity.Text, 
                 textBoxTitanit.Text, 
                 dialog.FileName, 
                 new StatisticsConfig(Params.DailyActivity, Params.WeeklyActivity, Params.DailyTitanit, Params.WeeklyTitanit));
