@@ -76,41 +76,54 @@ internal class PlayerStatisticsService
 
     public double CalcTitanitTotal()
     {
-        throw new NotImplementedException();
+        return _player.Days.Where(d => !d.IsEmpty).Sum(d => d.TitanitPoints);
     }
 
     public double CalcTitanitMean()
     {
-        throw new NotImplementedException();
+        return CalcTitanitTotal() / CalcDaysCount();
     }
 
     public double CalcTitanitStandardDeviation()
     {
-        throw new NotImplementedException();
+        double mean = CalcTitanitMean();
+        double[] points = _player.Days
+            .Where(d => !d.IsEmpty)
+            .Select(d => d.TitanitPoints)
+            .ToArray();
+
+        double dispersion = points.Average(point => Math.Pow(point - mean, 2));
+        return Math.Sqrt(dispersion);
     }
 
     public int CalcTitanitZeroDaysCount()
     {
-        throw new NotImplementedException();
+        return _player.Days.Where(d => !d.IsEmpty)
+            .Select(d => d.TitanitPoints)
+            .Count(p => p < 0.5);
     }
 
     public bool CalcTitanitAlwaysDailyPlan()
     {
-        throw new NotImplementedException();
+        return _player.Days.Where(d => !d.IsEmpty)
+            .Select(d => d.TitanitPoints)
+            .All(p => p >= _statisticsConfig.DailyTitanit);
     }
 
     public double CalcTitanitOutputNorm()
     {
-        throw new NotImplementedException();
+        return CalcTitanitAlwaysDailyPlan()
+            ? _statisticsConfig.DailyTitanit * CalcDaysCount()
+            : _statisticsConfig.WeeklyTitanit * CalcDaysCount() / 7.0;
     }
 
     public double CalcTitanitPercentage()
     {
-        throw new NotImplementedException();
+        return CalcTitanitTotal() / CalcTitanitOutputNorm() * 100.0;
     }
 
     public bool CalcTitanitSuccess()
     {
-        throw new NotImplementedException();
+        return CalcTitanitPercentage() >= 100;
     }
 }
