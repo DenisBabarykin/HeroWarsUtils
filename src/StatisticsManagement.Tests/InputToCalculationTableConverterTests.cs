@@ -383,12 +383,8 @@ Player1,10,20,30,40,50,60,70";
         var activityTable = _csvConverter.Convert(activityCsv);
         var titanitTable = _csvConverter.Convert(titanitCsv);
 
-        // Act - all days will be empty, which violates Player constructor requirement
-        var result = _converter.Convert(activityTable, titanitTable);
-
-        // Assert - should succeed but all days are empty
-        Assert.Single(result.Players);
-        Assert.All(result.Players[0].Days, d => Assert.True(d.IsEmpty));
+        // Act & Assert - all days will be empty, which violates Player constructor requirement
+        Assert.Throws<ArgumentException>(() => _converter.Convert(activityTable, titanitTable));
     }
 
     [Fact]
