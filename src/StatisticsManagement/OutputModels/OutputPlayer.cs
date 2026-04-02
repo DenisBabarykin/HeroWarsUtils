@@ -14,6 +14,7 @@ internal class OutputPlayer
     public double ActivityStandardDeviation { get; }
     public int ActivityZeroDaysCount { get; }
     public bool ActivityAlwaysDailyPlan { get; }
+    public double ActivityOutputNorm { get; }
     public double ActivityPercentage { get; } 
     public bool ActivitySuccess { get; }
 
@@ -22,24 +23,27 @@ internal class OutputPlayer
     public double TitanitStandardDeviation { get; }
     public int TitanitZeroDaysCount { get; }
     public bool TitanitAlwaysDailyPlan { get; }
+    public double TitanitOutputNorm { get; }
     public double TitanitPercentage { get; }
     public bool TitanitSuccess { get; }
 
-    public OutputPlayer(string name, 
-        int daysCount, 
-        double activityTotal, 
-        double activityMean, 
-        double activityStandardDeviation, 
-        int activityZeroDaysCount, 
-        bool activityAlwaysDailyPlan, 
-        double activityPercentage, 
-        bool activitySuccess, 
-        double titanitTotal, 
-        double titanitMean, 
-        double titanitStandardDeviation, 
-        int titanitZeroDaysCount, 
-        bool titanitAlwaysDailyPlan, 
-        double titanitPercentage, 
+    public OutputPlayer(string name,
+        int daysCount,
+        double activityTotal,
+        double activityMean,
+        double activityStandardDeviation,
+        int activityZeroDaysCount,
+        bool activityAlwaysDailyPlan,
+        double activityOutputNorm,
+        double activityPercentage,
+        bool activitySuccess,
+        double titanitTotal,
+        double titanitMean,
+        double titanitStandardDeviation,
+        int titanitZeroDaysCount,
+        bool titanitAlwaysDailyPlan,
+        double titanitOutputNorm,
+        double titanitPercentage,
         bool titanitSuccess)
     {
         Name = name;
@@ -49,6 +53,7 @@ internal class OutputPlayer
         ActivityStandardDeviation = activityStandardDeviation;
         ActivityZeroDaysCount = activityZeroDaysCount;
         ActivityAlwaysDailyPlan = activityAlwaysDailyPlan;
+        ActivityOutputNorm = activityOutputNorm;
         ActivityPercentage = activityPercentage;
         ActivitySuccess = activitySuccess;
         TitanitTotal = titanitTotal;
@@ -56,6 +61,7 @@ internal class OutputPlayer
         TitanitStandardDeviation = titanitStandardDeviation;
         TitanitZeroDaysCount = titanitZeroDaysCount;
         TitanitAlwaysDailyPlan = titanitAlwaysDailyPlan;
+        TitanitOutputNorm = titanitOutputNorm;
         TitanitPercentage = titanitPercentage;
         TitanitSuccess = titanitSuccess;
     }

@@ -18,6 +18,9 @@ internal class Player
         if (days.Count == 0)
             throw new ArgumentOutOfRangeException(nameof(days), "Коллекция дней не может быть пустой.");
 
+        if (days.All(d => d.IsEmpty))
+            throw new ArgumentException(nameof(days), "У игрока не могут быть пустыми все дни.");
+
         Name = name;
         Days = days;
     }
