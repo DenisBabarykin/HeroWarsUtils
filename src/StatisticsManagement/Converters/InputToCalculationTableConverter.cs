@@ -1,4 +1,4 @@
-﻿using StatisticsManagement.CalculationModels;
+using StatisticsManagement.CalculationModels;
 using StatisticsManagement.InputModels;
 using StatisticsManagement.StringComparation;
 using System;

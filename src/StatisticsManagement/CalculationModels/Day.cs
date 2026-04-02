@@ -1,4 +1,4 @@
-﻿using StatisticsManagement.Common;
+using StatisticsManagement.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;

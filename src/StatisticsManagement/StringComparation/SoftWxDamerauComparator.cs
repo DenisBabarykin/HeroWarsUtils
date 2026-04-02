@@ -1,4 +1,4 @@
-﻿using SoftWx.Match;
+using SoftWx.Match;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,4 +1,4 @@
-﻿using StatisticsManagement.Converters;
+using StatisticsManagement.Converters;
 using StatisticsManagement.InputModels;
 using System;
 using System.Collections.Generic;

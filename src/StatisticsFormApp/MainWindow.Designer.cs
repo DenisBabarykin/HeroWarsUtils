@@ -1,4 +1,4 @@
-﻿namespace StatisticsFormApp
+namespace StatisticsFormApp
 {
     partial class MainWindow
     {

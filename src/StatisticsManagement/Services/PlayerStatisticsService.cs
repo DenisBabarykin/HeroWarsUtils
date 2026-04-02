@@ -1,4 +1,4 @@
-﻿using StatisticsManagement.CalculationModels;
+using StatisticsManagement.CalculationModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,7 +59,9 @@ internal class PlayerStatisticsService
 
     public double CalcActivityOutputNorm()
     {
-        return _statisticsConfig.WeeklyActivity / 7.0 * CalcDaysCount();
+        return CalcActivityAlwaysDailyPlan() 
+            ? _statisticsConfig.DailyActivity * CalcDaysCount()
+            : _statisticsConfig.WeeklyActivity * CalcDaysCount() / 7.0;
     }
 
     public double CalcActivityPercentage()
