@@ -40,6 +40,8 @@ public partial class MainWindow : Form
                 textBoxTitanit.Text, 
                 dialog.FileName, 
                 new StatisticsConfig(Params.DailyActivity, Params.WeeklyActivity, Params.DailyTitanit, Params.WeeklyTitanit));
+            
+            MessageBox.Show("Отчет успешно сохранен!");
         }
     }
 
