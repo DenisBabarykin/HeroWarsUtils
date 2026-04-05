@@ -24,9 +24,24 @@ internal class ReportGenerator
 
         var headers = new[]
         {
-            "Name", "DaysCount",
-            "ActivityTotal", "ActivityMean", "ActivityStandardDeviation", "ActivityZeroDaysCount", "ActivityAlwaysDailyPlan", "ActivityOutputNorm", "ActivityPercentage", "ActivitySuccess",
-            "TitanitTotal", "TitanitMean", "TitanitStandardDeviation", "TitanitZeroDaysCount", "TitanitAlwaysDailyPlan", "TitanitOutputNorm", "TitanitPercentage", "TitanitSuccess"
+            "Игрок", 
+            "Кол-во учтенных дней",
+            "Всего набрано очков Активности", 
+            "Средняя Активность", 
+            "Среднеквадратическое отклонение Активности", 
+            "Кол-во дней без Активности", 
+            "Каждый день набирал норму по Активности", 
+            "Персональная норма Активности", 
+            "Процент выполнения нормы Активности", 
+            "Норма Активности выполнена",
+            "Всего набрано очков Титанита",
+            "Среднее кол-во Титанита",
+            "Среднеквадратическое отклонение Титанита",
+            "Кол-во дней без Титанита",
+            "Каждый день набирал норму по Титаниту",
+            "Персональная норма Титанита",
+            "Процент выполнения нормы Титанита",
+            "Норма Титанита выполнена",
         };
 
         for (int col = 1; col <= headers.Length; col++)
