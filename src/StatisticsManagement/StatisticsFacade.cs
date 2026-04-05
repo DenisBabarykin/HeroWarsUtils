@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using StatisticsManagement.OutputModels;
 using StatisticsManagement.Services;
+using StatisticsManagement.Excel;
 
 namespace StatisticsManagement;
 
@@ -22,7 +23,7 @@ public class StatisticsFacade
 
         List<OutputPlayer> outputPlayers = new StatisticsService().CalcStatistics(table.Players, statisticsConfig);
 
-
+        new ReportGenerator(outputPlayers).WriteReportToFile(outputFilename);
     }
 
 }
