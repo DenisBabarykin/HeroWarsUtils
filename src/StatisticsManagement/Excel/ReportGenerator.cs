@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using StatisticsManagement.CalculationModels;
+using StatisticsManagement.Converters;
 using StatisticsManagement.OutputModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ namespace StatisticsManagement.Excel;
 internal class ReportGenerator
 {
     private readonly List<OutputPlayer> _players;
+    private readonly List<Player> _calculationPlayers;
 
     private readonly XLColor HeaderBackground = XLColor.FromArgb(197, 217, 241);
     private readonly XLColor GoodFont = XLColor.FromArgb(0, 97, 0);
@@ -21,30 +24,103 @@ internal class ReportGenerator
     private readonly XLColor BottomFont = XLColor.White;
     private readonly XLColor BottomgBackground = XLColor.FromArgb(255, 91, 111);
 
-    public ReportGenerator(List<OutputPlayer> players)
+    public ReportGenerator(List<OutputPlayer> players, List<Player> calculationPlayers)
     {
         _players = players;
+        _calculationPlayers = calculationPlayers;
     }
 
     public void WriteReportToFile(string filename)
     {
         using var workbook = new XLWorkbook();
-        var worksheet = workbook.Worksheets.Add("Players");
+        FillSummarySheet(workbook);
+        FillDetailedReportSheet(workbook);
+        FillActivitySheet(workbook);
+        FillTitanitSheet(workbook);
+
+        workbook.SaveAs(filename);
+    }
+
+    private void FillSummarySheet(XLWorkbook workbook)
+    {
+        var worksheet = workbook.Worksheets.Add("Краткая сводка");
         worksheet.Style.Font.FontName = "Arial";
 
         int row = 1;
 
         var headers = new[]
         {
-            "Игрок", 
+            "Игрок (кратко)",
+            "Процент выполнения нормы Активности, %",
+            "Процент выполнения нормы Титанита, %",
+        };
+
+        for (int col = 1; col <= headers.Length; col++)
+        {
+            var cell = worksheet.Cell(row, col);
+            cell.Value = headers[col - 1];
+            cell.Style.Font.Bold = true;
+            cell.Style.Alignment.SetWrapText();
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            cell.Style.Fill.BackgroundColor = HeaderBackground;
+        }
+
+        row++;
+
+        foreach (var player in _players)
+        {
+            worksheet.Cell(row, 1).Value = player.Name;
+
+            worksheet.Cell(row, 2).Value = Math.Round(player.ActivityPercentage);
+            worksheet.Cell(row, 2).Style.NumberFormat.Format = "0\"%\"";
+            worksheet.Cell(row, 2).Style.Font.FontColor = player.ActivityPercentage >= 100 ? GoodFont : BadFont;
+            worksheet.Cell(row, 2).Style.Fill.BackgroundColor = player.ActivityPercentage >= 100 ? GoodBackground : BadBackground;
+            worksheet.Cell(row, 2).Style.Font.FontColor = player.ActivityPercentage < 33 ? BottomFont : worksheet.Cell(row, 2).Style.Font.FontColor;
+            worksheet.Cell(row, 2).Style.Fill.BackgroundColor = player.ActivityPercentage < 33 ? BottomgBackground : worksheet.Cell(row, 2).Style.Fill.BackgroundColor;
+            worksheet.Cell(row, 2).Style.Font.FontColor = player.ActivityPercentage > 300 ? TopFont : worksheet.Cell(row, 2).Style.Font.FontColor;
+            worksheet.Cell(row, 2).Style.Fill.BackgroundColor = player.ActivityPercentage > 300 ? TopBackground : worksheet.Cell(row, 2).Style.Fill.BackgroundColor;
+
+            worksheet.Cell(row, 3).Value = Math.Round(player.TitanitPercentage);
+            worksheet.Cell(row, 3).Style.NumberFormat.Format = "0\"%\"";
+            worksheet.Cell(row, 3).Style.Font.FontColor = player.TitanitPercentage >= 100 ? GoodFont : BadFont;
+            worksheet.Cell(row, 3).Style.Fill.BackgroundColor = player.TitanitPercentage >= 100 ? GoodBackground : BadBackground;
+            worksheet.Cell(row, 3).Style.Font.FontColor = player.TitanitPercentage < 33 ? BottomFont : worksheet.Cell(row, 3).Style.Font.FontColor;
+            worksheet.Cell(row, 3).Style.Fill.BackgroundColor = player.TitanitPercentage < 33 ? BottomgBackground : worksheet.Cell(row, 3).Style.Fill.BackgroundColor;
+            worksheet.Cell(row, 3).Style.Font.FontColor = player.TitanitPercentage > 300 ? TopFont : worksheet.Cell(row, 3).Style.Font.FontColor;
+            worksheet.Cell(row, 3).Style.Fill.BackgroundColor = player.TitanitPercentage > 300 ? TopBackground : worksheet.Cell(row, 3).Style.Fill.BackgroundColor;
+
+            row++;
+        }
+
+        worksheet.Columns().AdjustToContents(2, worksheet.LastRowUsed()!.RowNumber(), 14, 24);
+        var range = worksheet.RangeUsed();
+        range!.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        foreach (var cell in range.Cells())
+        {
+            if (cell.DataType == XLDataType.Number && cell.Style.NumberFormat.Format != "0\"%\"")
+                cell.Style.NumberFormat.Format = "#,##0";
+        }
+    }
+
+    private void FillDetailedReportSheet(XLWorkbook workbook)
+    {
+        var worksheet = workbook.Worksheets.Add("Подробная сводка");
+        worksheet.Style.Font.FontName = "Arial";
+
+        int row = 1;
+
+        var headers = new[]
+        {
+            "Игрок (подробно)",
             "Кол-во учтенных дней",
-            "Всего набрано очков Активности", 
-            "Средняя Активность", 
-            "Среднеквадратическое отклонение Активности", 
-            "Кол-во дней без Активности", 
-            "Каждый день набирал норму по Активности", 
-            "Персональная норма Активности", 
-            "Процент выполнения нормы Активности, %", 
+            "Всего набрано очков Активности",
+            "Средняя Активность",
+            "Среднеквадратическое отклонение Активности",
+            "Кол-во дней без Активности",
+            "Каждый день набирал норму по Активности",
+            "Персональная норма Активности",
+            "Процент выполнения нормы Активности, %",
             "Норма Активности выполнена",
             "Всего набрано очков Титанита",
             "Среднее кол-во Титанита",
@@ -144,7 +220,103 @@ internal class ReportGenerator
             if (cell.DataType == XLDataType.Number && cell.Style.NumberFormat.Format != "0\"%\"")
                 cell.Style.NumberFormat.Format = "#,##0";
         }
+    }
 
-        workbook.SaveAs(filename);
+    private void FillActivitySheet(XLWorkbook workbook)
+    {
+        var worksheet = workbook.Worksheets.Add("Данные по Активности");
+        worksheet.Style.Font.FontName = "Arial";
+
+        int row = 1;
+
+        var headers = new[]
+        {
+            "Игрок (Активность)",
+        }.ToList();
+        headers.AddRange(_calculationPlayers.First().Days.Select(d => new DayOfWeekConverter().ConvertToString(d.DayOfWeek)).ToList());
+
+        for (int col = 1; col <= headers.Count; col++)
+        {
+            var cell = worksheet.Cell(row, col);
+            cell.Value = headers[col - 1];
+            cell.Style.Font.Bold = true;
+            cell.Style.Alignment.SetWrapText();
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            cell.Style.Fill.BackgroundColor = HeaderBackground;
+        }
+
+        row++;
+
+        foreach (var player in _calculationPlayers)
+        {
+            worksheet.Cell(row, 1).Value = player.Name;
+
+            int col = 2;
+            foreach (var day in player.Days)
+            {
+                worksheet.Cell(row, col++).Value = !day.IsEmpty ? Math.Round(day.ActivityPoints) : "-"; 
+            }
+
+            row++;
+        }
+
+        worksheet.Columns().AdjustToContents(2, worksheet.LastRowUsed()!.RowNumber(), 12, 20);
+        var range = worksheet.RangeUsed();
+        range!.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        foreach (var cell in range.Cells())
+        {
+            if (cell.DataType == XLDataType.Number && cell.Style.NumberFormat.Format != "0\"%\"")
+                cell.Style.NumberFormat.Format = "#,##0";
+        }
+    }
+
+    private void FillTitanitSheet(XLWorkbook workbook)
+    {
+        var worksheet = workbook.Worksheets.Add("Данные по Титаниту");
+        worksheet.Style.Font.FontName = "Arial";
+
+        int row = 1;
+
+        var headers = new[]
+        {
+            "Игрок (Титанит)",
+        }.ToList();
+        headers.AddRange(_calculationPlayers.First().Days.Select(d => new DayOfWeekConverter().ConvertToString(d.DayOfWeek)).ToList());
+
+        for (int col = 1; col <= headers.Count; col++)
+        {
+            var cell = worksheet.Cell(row, col);
+            cell.Value = headers[col - 1];
+            cell.Style.Font.Bold = true;
+            cell.Style.Alignment.SetWrapText();
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            cell.Style.Fill.BackgroundColor = HeaderBackground;
+        }
+
+        row++;
+
+        foreach (var player in _calculationPlayers)
+        {
+            worksheet.Cell(row, 1).Value = player.Name;
+
+            int col = 2;
+            foreach (var day in player.Days)
+            {
+                worksheet.Cell(row, col++).Value = !day.IsEmpty ? Math.Round(day.TitanitPoints) : "-";
+            }
+
+            row++;
+        }
+
+        worksheet.Columns().AdjustToContents(2, worksheet.LastRowUsed()!.RowNumber(), 12, 20);
+        var range = worksheet.RangeUsed();
+        range!.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        foreach (var cell in range.Cells())
+        {
+            if (cell.DataType == XLDataType.Number && cell.Style.NumberFormat.Format != "0\"%\"")
+                cell.Style.NumberFormat.Format = "#,##0";
+        }
     }
 }

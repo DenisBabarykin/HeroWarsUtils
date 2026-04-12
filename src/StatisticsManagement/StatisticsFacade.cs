@@ -23,7 +23,7 @@ public class StatisticsFacade
 
         List<OutputPlayer> outputPlayers = new StatisticsService().CalcStatistics(table.Players, statisticsConfig);
 
-        new ReportGenerator(outputPlayers).WriteReportToFile(outputFilename);
+        new ReportGenerator(outputPlayers, table.Players).WriteReportToFile(outputFilename);
     }
 
 }
